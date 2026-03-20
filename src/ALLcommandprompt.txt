@@ -1,6 +1,6 @@
 PYTHON
 # Navigate to your backend directory
-cd "c:\Users\vncea\OneDrive\Desktop\react\my-react-app\backend"
+cd "c:\Users\Lester\Documents\GitHub\Integrated-tenant-and-commercial-space-information-management-system\backend"
 
 # Create and activate virtual environment (recommended)
 python -m venv venv
@@ -79,8 +79,8 @@ Appointment.objects.filter(user_id=1)  # Filter by condition
 
 4. Create a superuser (if needed for admin):  python manage.py createsuperuser
 
-5.  Run pwsh command within C:\Users\vncea\OneDrive\Desktop\react\my-react-app\backend?
-cd c:\Users\vncea\OneDrive\Desktop\react\my-react-app\backend ; sqlite3 db.sqlite3 ".tables"
+5.  Run pwsh command within C:\Users\Lester\Documents\GitHub\Integrated-tenant-and-commercial-space-information-management-system\backend?
+cd c:\Users\Lester\Documents\GitHub\Integrated-tenant-and-commercial-space-information-management-system\backend ; sqlite3 db.sqlite3 ".tables"
 
 Database Structure & Data Summary
 Database Models (11 tables):
