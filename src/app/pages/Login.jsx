@@ -8,6 +8,7 @@ import { Label } from '../components/ui/label.jsx';
 import { Checkbox } from '../components/ui/checkbox.jsx';
 import { Alert, AlertDescription } from '../components/ui/alert.jsx';
 import { Eye, EyeOff, Loader2, Building2, UserCog, User } from 'lucide-react';
+import mannaLogo from '../images/manna_logo.png';
 
 export function Login() {
   const { login } = useAuth();
@@ -99,73 +100,88 @@ export function Login() {
 
   
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-      {/* Animated background decoration */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute top-40 left-40 w-80 h-80 bg-indigo-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
-      </div>
+    <div className="relative min-h-screen bg-amber-50 flex items-center justify-center p-4">
 
-      {/* Login card */}
-      <Card className="w-full max-w-md relative backdrop-blur-sm bg-white/90 shadow-2xl border-0">
-        <CardHeader className="space-y-1 text-center">
-          {/* Logo/Icon */}
-          <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
-              <Building2 className="h-8 w-8 text-white" />
-            </div>
+      {/* Subtle pattern overlay */}
+      <div className="absolute inset-0 opacity-30" style={{
+        backgroundImage: `radial-gradient(circle at 1px 1px, #fbbf24 1px, transparent 0)`,
+        backgroundSize: '40px 40px'
+      }} />
+
+      {/* Center column */}
+      <div className="relative w-full max-w-md flex flex-col items-center">
+
+        {/* Logo / brand */}
+        <div className="flex flex-col items-center justify-center gap-3 mb-8">
+          <img 
+            src={mannaLogo}
+            alt="Company Logo" 
+            className="w-24 h-24 object-contain drop-shadow-lg"
+          />
+          <span className="font-black text-2xl text-[#2E3192] tracking-wide">
+            Manna Mall
+          </span>
+        </div>
+
+        {/* Card */}
+        <div className="bg-white border border-gray-200 rounded-2xl p-8 w-full shadow-xl">
+
+          {/* Card heading */}
+          <div className="text-center mb-6 space-y-1">
+            <h1 className="text-2xl font-extrabold text-[#2E3192]">Welcome Back</h1>
+            <p className="text-sm text-gray-500">Sign in to access your dashboard</p>
           </div>
-          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-            Commercial Space Manager
-          </CardTitle>
-          <CardDescription className="text-gray-600">
-            Sign in to access your dashboard
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent>
-        
 
           {/* Error alert */}
           {error && (
-            <Alert variant="destructive" className="mb-6">
+            <Alert variant="destructive" className="mb-6 bg-red-50 border border-red-200 text-red-700">
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+
             {/* Email input */}
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium">
-                Email 
-              </Label>
+            <div className="flex flex-col gap-1.5">
+              <label
+                htmlFor="email"
+                className="text-xs font-semibold text-[#2E3192] uppercase tracking-wider"
+              >
+                Email Address
+              </label>
               <Input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="h-11 px-4"
                 disabled={loading}
                 autoComplete="email"
                 autoFocus
                 required
+                className="w-full px-4 py-3 rounded-xl bg-gray-50 text-gray-900 placeholder:text-gray-400 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F9E81B] focus:border-[#F9E81B] transition h-11"
               />
             </div>
 
             {/* Password input with show/hide toggle */}
-            <div className="space-y-2">
+            <div className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-sm font-medium">
+                <label
+                  htmlFor="password"
+                  className="text-xs font-semibold text-[#2E3192] uppercase tracking-wider"
+                >
                   Password
-                </Label>
+                </label>
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="text-sm text-blue-600 hover:text-blue-700 focus:outline-none"
+                  className="text-sm text-[#ED1C24] hover:text-[#c41920] underline transition focus:outline-none"
                 >
-                 
+                  {showPassword ? (
+                    <span className="flex items-center gap-1"><EyeOff className="w-3.5 h-3.5" /> Hide</span>
+                  ) : (
+                    <span className="flex items-center gap-1"><Eye className="w-3.5 h-3.5" /> Show</span>
+                  )}
                 </button>
               </div>
               <Input
@@ -174,34 +190,38 @@ export function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="h-11 px-4"
                 disabled={loading}
                 autoComplete="current-password"
                 required
+                className="w-full px-4 py-3 rounded-xl bg-gray-50 text-gray-900 placeholder:text-gray-400 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F9E81B] focus:border-[#F9E81B] transition h-11"
               />
             </div>
 
             {/* Remember me checkbox */}
-            <div className="flex items-center space-x-2">
-              <Checkbox 
-                id="remember" 
-                checked={rememberMe}
-                onCheckedChange={(checked) => setRememberMe(checked === true)}
-                disabled={loading}
-              />
-              <Label 
-                htmlFor="remember" 
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-              >
-                Remember me
-              </Label>
+            <div className="flex justify-between items-center">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <Checkbox
+                  id="remember"
+                  checked={rememberMe}
+                  onCheckedChange={(checked) => setRememberMe(checked === true)}
+                  disabled={loading}
+                  className="w-4 h-4 border-gray-300 data-[state=checked]:bg-[#2E3192] data-[state=checked]:border-[#2E3192]"
+                />
+                <span className="text-sm text-gray-600">Remember me</span>
+              </label>
             </div>
 
-            {/* Submit button with loading state */}
-            <Button 
-              type="submit" 
-              className="w-full h-11 text-base font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all duration-200"
+            {/* Submit button */}
+            <Button
+              type="submit"
               disabled={loading}
+              className={`
+                w-full py-3 h-12 rounded-xl font-bold transition active:scale-95 shadow-lg mt-2 text-base
+                ${loading
+                  ? 'bg-[#F9E81B]/60 text-[#2E3192] cursor-wait'
+                  : 'bg-[#F9E81B] hover:bg-[#e6d619] text-[#2E3192] cursor-pointer'
+                }
+              `}
             >
               {loading ? (
                 <>
@@ -214,38 +234,27 @@ export function Login() {
             </Button>
           </form>
 
-        
-        </CardContent>
+          {/* Forgot password link */}
+          <div className="mt-4 text-center">
+            <a href="#" className="text-sm text-[#ED1C24] hover:text-[#c41920] transition underline">
+              Forgot your password?
+            </a>
+          </div>
 
-        <CardFooter className="flex flex-col space-y-2 text-center text-sm text-gray-600">
-          <p>© 2026 Commercial Space Manager. All rights reserved.</p>
-          <p className="text-xs">
+        </div>{/* end card */}
+
+        {/* Footer */}
+        <div className="mt-6 flex flex-col items-center gap-1 text-center">
+          <p className="text-xs text-gray-500">© 2026 Commercial Space Manager. All rights reserved.</p>
+          <p className="text-xs text-gray-400">
             By signing in, you agree to our{' '}
-            <a href="#" className="text-blue-600 hover:underline">Terms</a>
+            <a href="#" className="text-[#2E3192] hover:text-[#1f2170] transition underline">Terms</a>
             {' '}and{' '}
-            <a href="#" className="text-blue-600 hover:underline">Privacy Policy</a>
+            <a href="#" className="text-[#2E3192] hover:text-[#1f2170] transition underline">Privacy Policy</a>
           </p>
-        </CardFooter>
-      </Card>
+        </div>
 
-      {/* Add animation styles */}
-      <style>{`
-        @keyframes blob {
-          0% { transform: translate(0px, 0px) scale(1); }
-          33% { transform: translate(30px, -50px) scale(1.1); }
-          66% { transform: translate(-20px, 20px) scale(0.9); }
-          100% { transform: translate(0px, 0px) scale(1); }
-        }
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-      `}</style>
+      </div>{/* end column */}
     </div>
   );
 }

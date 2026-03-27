@@ -55,9 +55,9 @@ const tenantMenuItems = {
 
 const getRoleBadgeColor = (role) => {
   switch (role) {
-    case 'admin': return 'bg-purple-100 text-purple-700';
-    case 'staff': return 'bg-blue-100 text-blue-700';
-    case 'tenant': return 'bg-green-100 text-green-700';
+    case 'admin': return 'bg-[#2E3192]/10 text-[#2E3192]';
+    case 'staff': return 'bg-[#F9E81B]/30 text-[#2E3192]';
+    case 'tenant': return 'bg-[#ED1C24]/10 text-[#ED1C24]';
     default: return 'bg-gray-100 text-gray-700';
   }
 };
@@ -88,7 +88,7 @@ export function Sidebar({ role }) {
       <div className="space-y-1">
         {sectionTitle && (
           <div className="px-4 py-2">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            <h3 className="text-xs font-semibold text-[#2E3192]/60 uppercase tracking-wider">
               {sectionTitle}
             </h3>
           </div>
@@ -103,18 +103,18 @@ export function Sidebar({ role }) {
               className={cn(
                 'flex items-center justify-between gap-3 px-4 py-2.5 rounded-lg transition-colors',
                 isActive
-                  ? 'bg-blue-50 text-blue-600'
-                  : 'text-gray-700 hover:bg-gray-100'
+                  ? 'bg-[#F9E81B]/30 text-[#2E3192] border-l-4 border-[#2E3192]'
+                  : 'text-gray-700 hover:bg-[#F9E81B]/10 hover:text-[#2E3192]'
               )}
             >
               <div className="flex items-center gap-3">
-                <Icon className="h-5 w-5" />
+                <Icon className={cn("h-5 w-5", isActive ? "text-[#2E3192]" : "text-gray-500")} />
                 <span className="font-medium text-sm">{item.label}</span>
               </div>
               <ChevronRight 
                 className={cn(
                   "h-4 w-4",
-                  isActive ? "text-blue-600" : "text-gray-400"
+                  isActive ? "text-[#2E3192]" : "text-gray-400"
                 )}
               />
             </Link>
@@ -126,7 +126,7 @@ export function Sidebar({ role }) {
 
   return (
     <>
-      <aside className="w-64 bg-white border-r h-[calc(100vh-64px)] sticky top-16 hidden md:flex flex-col overflow-y-auto">
+      <aside className="w-64 bg-white border-r border-gray-200 h-[calc(100vh-64px)] sticky top-16 hidden md:flex flex-col overflow-y-auto">
         <div className="flex-1 p-4 space-y-6 overflow-y-auto">
           {/* Static sections with always visible arrows */}
           {renderStaticMenuSection(menuItems.management, 'Management')}
@@ -136,23 +136,23 @@ export function Sidebar({ role }) {
         {/* User profile - entire section clickable */}
         {user && (
           <div 
-            className="border-t p-4 cursor-pointer hover:bg-gray-50 transition-colors duration-200"
+            className="border-t border-gray-200 p-4 cursor-pointer hover:bg-[#F9E81B]/10 transition-colors duration-200"
             onClick={() => setIsLogoutModalOpen(true)}
           >
             <div className="flex items-center gap-3">
-              <Avatar className="h-9 w-9 border-2 border-gray-200 flex-shrink-0">
+              <Avatar className="h-9 w-9 border-2 border-[#F9E81B] flex-shrink-0">
                 <AvatarImage src={user.avatar} alt={user.firstName} />
-                <AvatarFallback className="bg-blue-100 text-blue-600 text-xs">
+                <AvatarFallback className="bg-[#2E3192] text-white text-xs">
                   {user.firstName?.[0]}{user.lastName?.[0]}
                 </AvatarFallback>
               </Avatar>
 
               <div className="flex flex-col min-w-0 flex-1">
-                <span className="text-sm font-medium text-gray-900 truncate">
+                <span className="text-sm font-medium text-[#2E3192] truncate">
                   {user.firstName} {user.lastName}
                 </span>
                 <span className={cn(
-                  'text-xs px-2 py-0.5 rounded-full w-fit mt-0.5',
+                  'text-xs px-2 py-0.5 rounded-full w-fit mt-0.5 font-medium capitalize',
                   getRoleBadgeColor(user.role)
                 )}>
                   {user.role}
@@ -160,7 +160,7 @@ export function Sidebar({ role }) {
               </div>
 
               {/* Logout icon - visual indicator only */}
-              <LogOut className="h-4 w-4 text-gray-400" />
+              <LogOut className="h-4 w-4 text-[#ED1C24]" />
             </div>
           </div>
         )}
@@ -170,8 +170,8 @@ export function Sidebar({ role }) {
       <Dialog open={isLogoutModalOpen} onOpenChange={setIsLogoutModalOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle className="text-xl">Confirm Logout</DialogTitle>
-            <DialogDescription className="text-base pt-2">
+            <DialogTitle className="text-xl text-[#2E3192]">Confirm Logout</DialogTitle>
+            <DialogDescription className="text-base pt-2 text-gray-600">
               Are you sure you want to log out of your account?
             </DialogDescription>
           </DialogHeader>
@@ -180,15 +180,14 @@ export function Sidebar({ role }) {
               type="button"
               variant="outline"
               onClick={() => setIsLogoutModalOpen(false)}
-              className="w-full sm:w-auto"
+              className="w-full sm:w-auto border-gray-300 text-gray-700 hover:bg-gray-50"
             >
               Cancel
             </Button>
             <Button
               type="button"
-              variant="destructive"
               onClick={handleLogout}
-              className="w-full sm:w-auto bg-red-600 hover:bg-red-700"
+              className="w-full sm:w-auto bg-[#ED1C24] hover:bg-[#c41920] text-white"
             >
               Logout
             </Button>
