@@ -7,7 +7,7 @@ import { Button } from '../../components/ui/button.jsx';
 import { Badge } from '../../components/ui/badge.jsx';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs.jsx';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table.jsx';
-import { Download, TrendingUp, FileText, Table as TableIcon } from 'lucide-react';
+import { Download, TrendingUp, FileText, Table as TableIcon, CheckCircle, XCircle, Clock } from 'lucide-react';
 import connection from '../../connected/connection.js';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../../components/ui/dropdown-menu.jsx';
 import { exportToCSV, exportToExcel, exportToWord, exportToDocx, printToPDF } from '../../exporting/export.js';
@@ -96,13 +96,24 @@ export function FinancialManagement() {
     printToPDF(headers, rows, `Receipt - ${payment.id}`);
   };
 
+  // Helper function to determine badge styling based on status
+  const getStatusBadge = (status) => {
+    if (status === 'completed') {
+      return { className: 'bg-[#2E3192] text-white hover:bg-[#2E3192]/90', icon: <CheckCircle className="h-3 w-3 mr-1" /> };
+    } else if (status === 'pending') {
+      return { className: 'bg-[#F9E81B]/30 text-[#2E3192] hover:bg-[#F9E81B]/40', icon: <Clock className="h-3 w-3 mr-1" /> };
+    } else {
+      return { className: 'bg-[#ED1C24]/10 text-[#ED1C24] hover:bg-[#ED1C24]/20', icon: <XCircle className="h-3 w-3 mr-1" /> };
+    }
+  };
+
   return (
     <Layout role="admin">
       <div className="space-y-6">
         {/* Header with export button */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-[#2E3192]">
               Financial Management
             </h1>
             <p className="text-gray-600 mt-1">
@@ -111,7 +122,7 @@ export function FinancialManagement() {
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline">
+              <Button variant="outline" className="border-gray-300">
                 <Download className="h-4 w-4 mr-2" />
                 Export Report
               </Button>
@@ -143,18 +154,17 @@ export function FinancialManagement() {
 
         {/* Financial summary cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card>
+          <Card className="border-2 border-transparent hover:border-[#F9E81B] transition-colors">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-gray-600">
                 Total Revenue
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">₱{totalRevenue.toLocaleString('en-PH')}</div>
-              
+              <div className="text-2xl font-bold text-[#2E3192]">₱{totalRevenue.toLocaleString('en-PH')}</div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-transparent hover:border-[#F9E81B] transition-colors">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-gray-600">
                 Paid Payment
@@ -164,75 +174,82 @@ export function FinancialManagement() {
               <div className="text-2xl font-bold text-green-600">₱{paidAmount.toLocaleString('en-PH')}</div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-transparent hover:border-[#F9E81B] transition-colors">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-gray-600">
                 Unpaid Payment
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-orange-600">₱{unpaidAmount.toLocaleString('en-PH')}</div>
+              <div className="text-2xl font-bold text-[#ED1C24]">₱{unpaidAmount.toLocaleString('en-PH')}</div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-transparent hover:border-[#F9E81B] transition-colors">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-gray-600">
                 Total Payment
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{payments.length}</div>
+              <div className="text-2xl font-bold text-[#2E3192]">{payments.length}</div>
             </CardContent>
           </Card>
         </div>
 
-
         {/* Financial records table with tabs */}
         <Card>
-          <CardHeader>
-            <CardTitle>Financial Records</CardTitle>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-[#2E3192]">Financial Records</CardTitle>
+            <CardDescription>All recorded payment transactions</CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="payments">
               
-              
               {/* Payments tab */}
               <TabsContent value="payments" className="mt-4">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Payment ID</TableHead>
-                      <TableHead>Tenant</TableHead>
-                      <TableHead>Amount (PHP)</TableHead>
-                      <TableHead>Payment Date</TableHead>
-                      <TableHead>Method</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {payments.map((payment) => (
-                      <TableRow key={payment.id}>
-                        <TableCell className="font-medium">{payment.id}</TableCell>
-                        <TableCell>{payment.tenant_name}</TableCell>
-                        <TableCell>₱{(payment.amount || 0).toLocaleString('en-PH')}</TableCell>
-                        <TableCell className="text-sm">{payment.payment_date}</TableCell>
-                        <TableCell>{payment.payment_method}</TableCell>
-                        <TableCell>
-                          <Badge variant={payment.status === 'completed' ? 'default' : 'destructive'}>
-                            {payment.status}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Button variant="ghost" size="sm" onClick={() => handleViewReceipt(payment)}>
-                            <FileText className="h-4 w-4 mr-2" />
-                            Receipt
-                          </Button>
-                        </TableCell>
+                <div className="rounded-md border border-gray-200">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-gray-50">
+                        <TableHead className="text-[#2E3192] font-semibold">Payment ID</TableHead>
+                        <TableHead className="text-[#2E3192] font-semibold">Tenant</TableHead>
+                        <TableHead className="text-[#2E3192] font-semibold">Amount (PHP)</TableHead>
+                        <TableHead className="text-[#2E3192] font-semibold">Payment Date</TableHead>
+                        <TableHead className="text-[#2E3192] font-semibold">Method</TableHead>
+                        <TableHead className="text-[#2E3192] font-semibold">Status</TableHead>
+                        <TableHead className="text-right text-[#2E3192] font-semibold">Actions</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {payments.map((payment) => {
+                        const statusBadge = getStatusBadge(payment.status);
+                        return (
+                          <TableRow key={payment.id} className="hover:bg-[#F9E81B]/5">
+                            <TableCell className="font-medium text-[#2E3192]">{payment.id}</TableCell>
+                            <TableCell>{payment.tenant_name}</TableCell>
+                            <TableCell>₱{(payment.amount || 0).toLocaleString('en-PH')}</TableCell>
+                            <TableCell className="text-sm">{payment.payment_date}</TableCell>
+                            <TableCell>{payment.payment_method}</TableCell>
+                            <TableCell>
+                              <Badge className={statusBadge.className}>
+                                <span className="flex items-center">
+                                  {statusBadge.icon}
+                                  {payment.status}
+                                </span>
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <Button variant="ghost" size="sm" className="hover:bg-[#F9E81B]/20 text-[#2E3192]" onClick={() => handleViewReceipt(payment)}>
+                                <FileText className="h-4 w-4 mr-2" />
+                                Receipt
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
               </TabsContent>
             </Tabs>
           </CardContent>

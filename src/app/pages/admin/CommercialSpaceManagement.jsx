@@ -201,11 +201,11 @@ export function CommercialSpaceManagement() {
   // Helper function to determine badge color based on status
   const getStatusVariant = (status) => {
     switch (status) {
-      case 'occupied': return 'default'; // Blue badge
-      case 'available': return 'secondary'; // Gray badge
-      case 'reserved': return 'outline'; // Outlined badge
-      case 'maintenance': return 'destructive'; // Red badge
-      default: return 'outline';
+      case 'occupied': return 'bg-[#2E3192] text-white hover:bg-[#2E3192]/90';
+      case 'available': return 'bg-green-100 text-green-700 hover:bg-green-200';
+      case 'reserved': return 'bg-[#F9E81B]/30 text-[#2E3192] hover:bg-[#F9E81B]/40';
+      case 'maintenance': return 'bg-[#ED1C24]/10 text-[#ED1C24] hover:bg-[#ED1C24]/20';
+      default: return 'bg-gray-100 text-gray-700';
     }
   };
 
@@ -215,14 +215,14 @@ export function CommercialSpaceManagement() {
         {/* Header with title and add button */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-[#2E3192]">
               Commercial Space Management
             </h1>
             <p className="text-gray-600 mt-1">
               Manage all commercial units and tenants
             </p>
           </div>
-          <Button onClick={() => setIsCreateDialogOpen(true)}>
+          <Button className="bg-[#F9E81B] hover:bg-[#e6d619] text-[#2E3192] font-semibold" onClick={() => setIsCreateDialogOpen(true)}>
             <Plus className="h-4 w-4 mr-2" />
             Add Unit
           </Button>
@@ -230,48 +230,48 @@ export function CommercialSpaceManagement() {
 
         {/* Stats cards showing unit overview */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card>
+          <Card className="border-2 border-transparent hover:border-[#F9E81B] transition-colors">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-gray-600">
                 Total Units
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{units.length}</div>
+              <div className="text-2xl font-bold text-[#2E3192]">{units.length}</div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-transparent hover:border-[#F9E81B] transition-colors">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-gray-600">
                 Occupied
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">
+              <div className="text-2xl font-bold text-[#2E3192]">
                 {units.filter(u => u.status === 'occupied').length}
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-transparent hover:border-[#F9E81B] transition-colors">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-gray-600">
                 Available
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-blue-600">
+              <div className="text-2xl font-bold text-green-600">
                 {units.filter(u => u.status === 'available').length}
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-2 border-transparent hover:border-[#F9E81B] transition-colors">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-gray-600">
                 Occupancy Rate
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
+              <div className="text-2xl font-bold text-[#2E3192]">
                 {units.length ? Math.round((units.filter(u => u.status === 'occupied').length / units.length) * 100) : 0}%
               </div>
             </CardContent>
@@ -279,9 +279,9 @@ export function CommercialSpaceManagement() {
         </div>
 
         {/* Filters card - search and status filter */}
-        <Card>
+        <Card className="border-2 border-transparent hover:border-[#F9E81B] transition-colors">
           <CardHeader>
-            <CardTitle>Filters</CardTitle>
+            <CardTitle className="text-[#2E3192]">Filters</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -292,12 +292,12 @@ export function CommercialSpaceManagement() {
                   placeholder="Search by unit or tenant..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
                 />
               </div>
               {/* Status filter dropdown */}
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger>
+                <SelectTrigger className="border-gray-200">
                   <SelectValue placeholder="Filter by status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -314,59 +314,62 @@ export function CommercialSpaceManagement() {
 
         {/* Units table */}
         <Card>
-          <CardHeader>
-            <CardTitle>Commercial Units ({filteredUnits.length})</CardTitle>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-[#2E3192]">Commercial Units ({filteredUnits.length})</CardTitle>
+            <CardDescription>View and manage commercial units</CardDescription>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[15%]">Unit Number</TableHead>
-                  <TableHead className="w-[10%]">Floor</TableHead>
-                  <TableHead className="w-[15%]">Type</TableHead>
-                  <TableHead className="w-[15%]">Status</TableHead>
-                  <TableHead className="w-[30%]">Tenant</TableHead>
-                  <TableHead className="text-right w-[15%]">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredUnits.map((unit) => (
-                  <TableRow key={unit.id}>
-                    <TableCell className="font-medium truncate">{unit.number || unit.unitNumber}</TableCell>
-                    <TableCell>{unit.floor}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className="capitalize">{unit.type}</Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={getStatusVariant(unit.status)} className="capitalize">
-                        {unit.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-sm truncate">
-                      {unit.tenant_name || '-'}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-1">
-                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openViewDialog(unit)}>
-                          <Eye className="h-4 w-4 text-gray-500" />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEditDialog(unit)}>
-                          <Edit className="h-4 w-4 text-blue-600" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => handleDeleteUnit(unit.id)}
-                        >
-                          <Trash2 className="h-4 w-4 text-red-600" />
-                        </Button>
-                      </div>
-                    </TableCell>
+            <div className="rounded-md border border-gray-200 overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-gray-50">
+                    <TableHead className="w-[15%] text-[#2E3192] font-semibold">Unit Number</TableHead>
+                    <TableHead className="w-[10%] text-[#2E3192] font-semibold">Floor</TableHead>
+                    <TableHead className="w-[15%] text-[#2E3192] font-semibold">Type</TableHead>
+                    <TableHead className="w-[15%] text-[#2E3192] font-semibold">Status</TableHead>
+                    <TableHead className="w-[30%] text-[#2E3192] font-semibold">Tenant</TableHead>
+                    <TableHead className="text-right w-[15%] text-[#2E3192] font-semibold">Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {filteredUnits.map((unit) => (
+                    <TableRow key={unit.id} className="hover:bg-[#F9E81B]/5">
+                      <TableCell className="font-medium text-[#2E3192] truncate">{unit.number || unit.unitNumber}</TableCell>
+                      <TableCell>{unit.floor}</TableCell>
+                      <TableCell>
+                        <Badge className="bg-[#2E3192]/10 text-[#2E3192] hover:bg-[#2E3192]/20 capitalize">{unit.type}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge className={`capitalize ${getStatusVariant(unit.status)}`}>
+                          {unit.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-sm truncate">
+                        {unit.tenant_name || '-'}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-1">
+                          <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-[#F9E81B]/20" onClick={() => openViewDialog(unit)}>
+                            <Eye className="h-4 w-4 text-gray-500" />
+                          </Button>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-[#F9E81B]/20" onClick={() => openEditDialog(unit)}>
+                            <Edit className="h-4 w-4 text-[#2E3192]" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 hover:bg-[#ED1C24]/10"
+                            onClick={() => handleDeleteUnit(unit.id)}
+                          >
+                            <Trash2 className="h-4 w-4 text-[#ED1C24]" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </CardContent>
         </Card>
 
@@ -374,33 +377,35 @@ export function CommercialSpaceManagement() {
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Create Commercial Unit</DialogTitle>
+              <DialogTitle className="text-[#2E3192]">Create Commercial Unit</DialogTitle>
               <DialogDescription>Add a new commercial space unit</DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Unit Number</Label>
+                  <Label className="text-[#2E3192] font-medium">Unit Number</Label>
                   <Input
                     value={formData.unitNumber}
                     onChange={(e) => setFormData({ ...formData, unitNumber: e.target.value })}
                     placeholder="e.g., A-101"
+                    className="border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Floor</Label>
+                  <Label className="text-[#2E3192] font-medium">Floor</Label>
                   <Input
                     type="number"
                     value={formData.floor}
                     onChange={(e) => setFormData({ ...formData, floor: parseInt(e.target.value) || 0 })}
+                    className="border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
                   />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Type</Label>
+                  <Label className="text-[#2E3192] font-medium">Type</Label>
                   <Select value={formData.type} onValueChange={(value) => setFormData({ ...formData, type: value })}>
-                    <SelectTrigger>
+                    <SelectTrigger className="border-gray-200">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -412,9 +417,9 @@ export function CommercialSpaceManagement() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label>Status</Label>
+                  <Label className="text-[#2E3192] font-medium">Status</Label>
                   <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
-                    <SelectTrigger>
+                    <SelectTrigger className="border-gray-200">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -428,10 +433,10 @@ export function CommercialSpaceManagement() {
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+              <Button variant="outline" className="border-gray-300" onClick={() => setIsCreateDialogOpen(false)}>
                 Cancel
               </Button>
-              <Button onClick={handleCreateUnit}>Create Unit</Button>
+              <Button className="bg-[#F9E81B] hover:bg-[#e6d619] text-[#2E3192] font-semibold" onClick={handleCreateUnit}>Create Unit</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -440,7 +445,7 @@ export function CommercialSpaceManagement() {
         <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
           <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle>Commercial Unit Details</DialogTitle>
+              <DialogTitle className="text-[#2E3192]">Commercial Unit Details</DialogTitle>
               <DialogDescription>View full details of the selected unit</DialogDescription>
             </DialogHeader>
             {selectedUnit && (
@@ -448,11 +453,11 @@ export function CommercialSpaceManagement() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <Label className="text-gray-500 text-xs">Unit Number</Label>
-                    <p className="font-semibold text-lg">{selectedUnit.number || selectedUnit.unitNumber}</p>
+                    <p className="font-semibold text-lg text-[#2E3192]">{selectedUnit.number || selectedUnit.unitNumber}</p>
                   </div>
                   <div className="space-y-1 text-right">
                     <Label className="text-gray-500 text-xs">Floor</Label>
-                    <p className="font-semibold text-lg">{selectedUnit.floor}</p>
+                    <p className="font-semibold text-lg text-[#2E3192]">{selectedUnit.floor}</p>
                   </div>
                 </div>
                 
@@ -460,13 +465,13 @@ export function CommercialSpaceManagement() {
                   <div className="space-y-1">
                     <Label className="text-gray-500 text-xs">Type</Label>
                     <div>
-                      <Badge variant="outline" className="capitalize">{selectedUnit.type}</Badge>
+                      <Badge className="bg-[#2E3192]/10 text-[#2E3192] hover:bg-[#2E3192]/20 capitalize">{selectedUnit.type}</Badge>
                     </div>
                   </div>
                   <div className="space-y-1 text-right">
                     <Label className="text-gray-500 text-xs">Status</Label>
                     <div>
-                      <Badge variant={getStatusVariant(selectedUnit.status)} className="capitalize">
+                      <Badge className={`capitalize ${getStatusVariant(selectedUnit.status)}`}>
                         {selectedUnit.status}
                       </Badge>
                     </div>
@@ -490,7 +495,7 @@ export function CommercialSpaceManagement() {
                    {(selectedUnit.monthly_rent || selectedUnit.monthlyRent || selectedUnit.rental_rate || selectedUnit.rentalRate) && (
                      <div className="space-y-1 text-right">
                        <Label className="text-gray-500 text-xs">Monthly Rent</Label>
-                       <p className="font-semibold text-blue-600">
+                       <p className="font-semibold text-[#2E3192]">
                          ₱{Number(selectedUnit.monthly_rent || selectedUnit.monthlyRent || selectedUnit.rental_rate || selectedUnit.rentalRate).toLocaleString()}
                        </p>
                      </div>
@@ -506,7 +511,7 @@ export function CommercialSpaceManagement() {
                </div>
             )}
             <DialogFooter>
-              <Button onClick={() => setIsViewDialogOpen(false)}>Close</Button>
+              <Button className="bg-[#F9E81B] hover:bg-[#e6d619] text-[#2E3192] font-semibold" onClick={() => setIsViewDialogOpen(false)}>Close</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -515,33 +520,35 @@ export function CommercialSpaceManagement() {
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Edit Commercial Unit</DialogTitle>
+              <DialogTitle className="text-[#2E3192]">Edit Commercial Unit</DialogTitle>
               <DialogDescription>Update unit details</DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Unit Number</Label>
+                  <Label className="text-[#2E3192] font-medium">Unit Number</Label>
                   <Input
                     value={formData.unitNumber}
                     onChange={(e) => setFormData({ ...formData, unitNumber: e.target.value })}
                     placeholder="e.g., A-101"
+                    className="border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Floor</Label>
+                  <Label className="text-[#2E3192] font-medium">Floor</Label>
                   <Input
                     type="number"
                     value={formData.floor}
                     onChange={(e) => setFormData({ ...formData, floor: parseInt(e.target.value) || 0 })}
+                    className="border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
                   />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Type</Label>
+                  <Label className="text-[#2E3192] font-medium">Type</Label>
                   <Select value={formData.type} onValueChange={(value) => setFormData({ ...formData, type: value })}>
-                    <SelectTrigger>
+                    <SelectTrigger className="border-gray-200">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -553,9 +560,9 @@ export function CommercialSpaceManagement() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label>Status</Label>
+                  <Label className="text-[#2E3192] font-medium">Status</Label>
                   <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
-                    <SelectTrigger>
+                    <SelectTrigger className="border-gray-200">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -569,12 +576,12 @@ export function CommercialSpaceManagement() {
               </div>
               
               <div className="space-y-2">
-                <Label>Assigned Tenant</Label>
+                <Label className="text-[#2E3192] font-medium">Assigned Tenant</Label>
                 <Select
                   value={formData.tenantId}
                   onValueChange={(value) => setFormData({ ...formData, tenantId: value })}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="border-gray-200">
                     <SelectValue placeholder="Select a tenant" />
                   </SelectTrigger>
                   <SelectContent>
@@ -592,10 +599,10 @@ export function CommercialSpaceManagement() {
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+              <Button variant="outline" className="border-gray-300" onClick={() => setIsEditDialogOpen(false)}>
                 Cancel
               </Button>
-              <Button onClick={handleUpdateUnit}>Update Unit</Button>
+              <Button className="bg-[#F9E81B] hover:bg-[#e6d619] text-[#2E3192] font-semibold" onClick={handleUpdateUnit}>Update Unit</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -603,11 +610,11 @@ export function CommercialSpaceManagement() {
         <Dialog open={isResultDialogOpen} onOpenChange={setIsResultDialogOpen}>
           <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle>{resultTitle}</DialogTitle>
+              <DialogTitle className="text-[#2E3192]">{resultTitle}</DialogTitle>
               <DialogDescription>{resultMessage}</DialogDescription>
             </DialogHeader>
             <DialogFooter>
-              <Button onClick={() => setIsResultDialogOpen(false)}>OK</Button>
+              <Button className="bg-[#F9E81B] hover:bg-[#e6d619] text-[#2E3192] font-semibold" onClick={() => setIsResultDialogOpen(false)}>OK</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

@@ -259,7 +259,7 @@ export function UserManagement() {
         {/* Header with title and action buttons */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-[#2E3192]">
               User Management
             </h1>
             <p className="text-gray-600 mt-1">
@@ -269,7 +269,7 @@ export function UserManagement() {
           <div className="flex gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" disabled={isExporting}>
+                <Button variant="outline" className="border-gray-300" disabled={isExporting}>
                   <Download className="h-4 w-4 mr-2" />
                   {isExporting ? 'Exporting...' : 'Export'}
                 </Button>
@@ -299,7 +299,10 @@ export function UserManagement() {
             </DropdownMenu>
             
             {/* Add user button */}
-            <Button onClick={() => setIsCreateDialogOpen(true)}>
+            <Button
+              className="bg-[#F9E81B] hover:bg-[#e6d619] text-[#2E3192] font-semibold"
+              onClick={() => setIsCreateDialogOpen(true)}
+            >
               <Plus className="h-4 w-4 mr-2" />
               Add User
             </Button>
@@ -307,9 +310,9 @@ export function UserManagement() {
         </div>
 
         {/* Filters card */}
-        <Card>
+        <Card className="border-2 border-transparent hover:border-[#F9E81B] transition-colors">
           <CardHeader>
-            <CardTitle>Filters</CardTitle>
+            <CardTitle className="text-[#2E3192]">Filters</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -320,13 +323,13 @@ export function UserManagement() {
                   placeholder="Search by name or email..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
                 />
               </div>
               
               {/* Role filter dropdown */}
               <Select value={roleFilter} onValueChange={setRoleFilter}>
-                <SelectTrigger>
+                <SelectTrigger className="border-gray-200">
                   <SelectValue placeholder="Filter by role" />
                 </SelectTrigger>
                 <SelectContent>
@@ -341,90 +344,100 @@ export function UserManagement() {
 
         {/* Users table */}
         <Card>
-          <CardHeader>
-            <CardTitle>Users ({filteredUsers.length})</CardTitle>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-[#2E3192]">Users ({filteredUsers.length})</CardTitle>
             <CardDescription>List of all system users</CardDescription>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>User</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead>Phone</TableHead>
-                  <TableHead>Unit/Department</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredUsers.map((user) => (
-                  <TableRow key={user.id}>
-                    {/* User avatar and name */}
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-8 w-8">
-                          <AvatarImage src={user.avatar} />
-                          <AvatarFallback>
-                            {(user.firstName || '?')[0]}{(user.lastName || '?')[0]}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-medium text-sm">
-                            {user.firstName} {user.lastName}
-                          </p>
-                          <p className="text-xs text-gray-500">ID: {user.id}</p>
-                        </div>
-                      </div>
-                    </TableCell>
-                    
-                    {/* User email */}
-                    <TableCell className="text-sm">{user.email}</TableCell>
-                    
-                    {/* User role badge */}
-                    <TableCell>
-                      <Badge variant={user.role === 'staff' ? 'default' : 'secondary'}>
-                        {user.role}
-                      </Badge>
-                    </TableCell>
-                    
-                    {/* User phone */}
-                    <TableCell className="text-sm">{user.phone || '-'}</TableCell>
-                    
-                    {/* User unit or department */}
-                    <TableCell className="text-sm">
-                      {user.unitNumber || user.department || '-'}
-                    </TableCell>
-                    
-                    {/* User status */}
-                    <TableCell>
-                      <Badge variant="outline">{user.status || 'active'}</Badge>
-                    </TableCell>
-                    
-                    {/* Action buttons */}
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => openEditDialog(user)}
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDeleteUser(user.id)}
-                        >
-                          <Trash2 className="h-4 w-4 text-red-600" />
-                        </Button>
-                      </div>
-                    </TableCell>
+            <div className="rounded-md border border-gray-200">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-gray-50">
+                    <TableHead className="text-[#2E3192] font-semibold">User</TableHead>
+                    <TableHead className="text-[#2E3192] font-semibold">Email</TableHead>
+                    <TableHead className="text-[#2E3192] font-semibold">Role</TableHead>
+                    <TableHead className="text-[#2E3192] font-semibold">Phone</TableHead>
+                    <TableHead className="text-[#2E3192] font-semibold">Unit/Department</TableHead>
+                    <TableHead className="text-[#2E3192] font-semibold">Status</TableHead>
+                    <TableHead className="text-right text-[#2E3192] font-semibold">Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {filteredUsers.map((user) => (
+                    <TableRow key={user.id} className="hover:bg-[#F9E81B]/5">
+                      {/* User avatar and name */}
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          <Avatar className="h-8 w-8">
+                            <AvatarImage src={user.avatar} />
+                            <AvatarFallback className="bg-[#2E3192]/10 text-[#2E3192] text-xs font-semibold">
+                              {(user.firstName || '?')[0]}{(user.lastName || '?')[0]}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <p className="font-medium text-sm text-[#2E3192]">
+                              {user.firstName} {user.lastName}
+                            </p>
+                            <p className="text-xs text-gray-500">ID: {user.id}</p>
+                          </div>
+                        </div>
+                      </TableCell>
+                      
+                      {/* User email */}
+                      <TableCell className="text-sm">{user.email}</TableCell>
+                      
+                      {/* User role badge */}
+                      <TableCell>
+                        <Badge className={
+                          user.role === 'staff'
+                            ? 'bg-[#2E3192] text-white hover:bg-[#2E3192]/90 capitalize'
+                            : 'bg-[#F9E81B]/30 text-[#2E3192] hover:bg-[#F9E81B]/40 capitalize'
+                        }>
+                          {user.role}
+                        </Badge>
+                      </TableCell>
+                      
+                      {/* User phone */}
+                      <TableCell className="text-sm">{user.phone || '-'}</TableCell>
+                      
+                      {/* User unit or department */}
+                      <TableCell className="text-sm">
+                        {user.unitNumber || user.department || '-'}
+                      </TableCell>
+                      
+                      {/* User status */}
+                      <TableCell>
+                        <Badge className="bg-green-100 text-green-700 hover:bg-green-200 capitalize">
+                          {user.status || 'active'}
+                        </Badge>
+                      </TableCell>
+                      
+                      {/* Action buttons */}
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="hover:bg-[#F9E81B]/20 text-[#2E3192]"
+                            onClick={() => openEditDialog(user)}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="hover:bg-[#ED1C24]/10"
+                            onClick={() => handleDeleteUser(user.id)}
+                          >
+                            <Trash2 className="h-4 w-4 text-[#ED1C24]" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </CardContent>
         </Card>
 
@@ -432,7 +445,7 @@ export function UserManagement() {
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
-              <DialogTitle>Create New User</DialogTitle>
+              <DialogTitle className="text-[#2E3192]">Create New User</DialogTitle>
               <DialogDescription>
                 Add a new user to the system
               </DialogDescription>
@@ -442,54 +455,58 @@ export function UserManagement() {
             <div className="grid grid-cols-2 gap-4">
               {/* First name */}
               <div className="space-y-2">
-                <Label htmlFor="firstName">First Name</Label>
+                <Label htmlFor="firstName" className="text-[#2E3192] font-medium">First Name</Label>
                 <Input
                   id="firstName"
                   value={formData.firstName}
                   onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                  className="border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
                 />
               </div>
               
               {/* Last name */}
               <div className="space-y-2">
-                <Label htmlFor="lastName">Last Name</Label>
+                <Label htmlFor="lastName" className="text-[#2E3192] font-medium">Last Name</Label>
                 <Input
                   id="lastName"
                   value={formData.lastName}
                   onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                  className="border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
                 />
               </div>
               
               {/* Email (full width) */}
               <div className="space-y-2 col-span-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email" className="text-[#2E3192] font-medium">Email</Label>
                 <Input
                   id="email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
                 />
               </div>
               
               {/* Password (full width) */}
               <div className="space-y-2 col-span-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password" className="text-[#2E3192] font-medium">Password</Label>
                 <Input
                   id="password"
                   type="password"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  className="border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
                 />
               </div>
               
               {/* Role select */}
               <div className="space-y-2">
-                <Label htmlFor="role">Role</Label>
+                <Label htmlFor="role" className="text-[#2E3192] font-medium">Role</Label>
                 <Select 
                   value={formData.role} 
                   onValueChange={(value) => setFormData({ ...formData, role: value })}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="border-gray-200">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -501,59 +518,69 @@ export function UserManagement() {
               
               {/* Phone */}
               <div className="space-y-2">
-                <Label htmlFor="phone">Phone</Label>
+                <Label htmlFor="phone" className="text-[#2E3192] font-medium">Phone</Label>
                 <Input
                   id="phone"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  className="border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
                 />
               </div>
               
               {/* Conditional fields based on role */}
               {formData.role === 'tenant' && (
                 <div className="space-y-2 col-span-2">
-                  <Label htmlFor="unitNumber">Unit Number</Label>
+                  <Label htmlFor="unitNumber" className="text-[#2E3192] font-medium">Unit Number</Label>
                   <Input
                     id="unitNumber"
                     value={formData.unitNumber}
                     onChange={(e) => setFormData({ ...formData, unitNumber: e.target.value })}
+                    className="border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
                   />
                 </div>
               )}
               
               {formData.role === 'staff' && (
                 <div className="space-y-2 col-span-2">
-                  <Label htmlFor="department">Department</Label>
+                  <Label htmlFor="department" className="text-[#2E3192] font-medium">Department</Label>
                   <Input
                     id="department"
                     value={formData.department}
                     onChange={(e) => setFormData({ ...formData, department: e.target.value })}
+                    className="border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
                   />
                 </div>
               )}
             </div>
             
             <DialogFooter>
-              <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+              <Button variant="outline" className="border-gray-300" onClick={() => setIsCreateDialogOpen(false)}>
                 Cancel
               </Button>
-              <Button onClick={handleCreateUser} disabled={isCreating}>
+              <Button
+                className="bg-[#F9E81B] hover:bg-[#e6d619] text-[#2E3192] font-semibold"
+                onClick={handleCreateUser}
+                disabled={isCreating}
+              >
                 {isCreating ? 'Creating...' : 'Create User'}
               </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
 
-        
-
         <Dialog open={isResultDialogOpen} onOpenChange={setIsResultDialogOpen}>
           <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle>{resultTitle}</DialogTitle>
+              <DialogTitle className="text-[#2E3192]">{resultTitle}</DialogTitle>
               <DialogDescription>{resultMessage}</DialogDescription>
             </DialogHeader>
             <DialogFooter>
-              <Button onClick={() => setIsResultDialogOpen(false)}>OK</Button>
+              <Button
+                className="bg-[#F9E81B] hover:bg-[#e6d619] text-[#2E3192] font-semibold"
+                onClick={() => setIsResultDialogOpen(false)}
+              >
+                OK
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -562,7 +589,7 @@ export function UserManagement() {
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
-              <DialogTitle>Edit User</DialogTitle>
+              <DialogTitle className="text-[#2E3192]">Edit User</DialogTitle>
               <DialogDescription>
                 Update user information
               </DialogDescription>
@@ -572,43 +599,46 @@ export function UserManagement() {
             <div className="grid grid-cols-2 gap-4">
               {/* First name */}
               <div className="space-y-2">
-                <Label htmlFor="editFirstName">First Name</Label>
+                <Label htmlFor="editFirstName" className="text-[#2E3192] font-medium">First Name</Label>
                 <Input
                   id="editFirstName"
                   value={formData.firstName}
                   onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                  className="border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
                 />
               </div>
               
               {/* Last name */}
               <div className="space-y-2">
-                <Label htmlFor="editLastName">Last Name</Label>
+                <Label htmlFor="editLastName" className="text-[#2E3192] font-medium">Last Name</Label>
                 <Input
                   id="editLastName"
                   value={formData.lastName}
                   onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                  className="border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
                 />
               </div>
               
               {/* Email (full width) */}
               <div className="space-y-2 col-span-2">
-                <Label htmlFor="editEmail">Email</Label>
+                <Label htmlFor="editEmail" className="text-[#2E3192] font-medium">Email</Label>
                 <Input
                   id="editEmail"
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
                 />
               </div>
               
               {/* Role select */}
               <div className="space-y-2">
-                <Label htmlFor="editRole">Role</Label>
+                <Label htmlFor="editRole" className="text-[#2E3192] font-medium">Role</Label>
                 <Select 
                   value={formData.role} 
                   onValueChange={(value) => setFormData({ ...formData, role: value })}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="border-gray-200">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -620,43 +650,50 @@ export function UserManagement() {
               
               {/* Phone */}
               <div className="space-y-2">
-                <Label htmlFor="editPhone">Phone</Label>
+                <Label htmlFor="editPhone" className="text-[#2E3192] font-medium">Phone</Label>
                 <Input
                   id="editPhone"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  className="border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
                 />
               </div>
               
               {/* Conditional fields based on role */}
               {formData.role === 'tenant' && (
                 <div className="space-y-2 col-span-2">
-                  <Label htmlFor="editUnitNumber">Unit Number</Label>
+                  <Label htmlFor="editUnitNumber" className="text-[#2E3192] font-medium">Unit Number</Label>
                   <Input
                     id="editUnitNumber"
                     value={formData.unitNumber}
                     onChange={(e) => setFormData({ ...formData, unitNumber: e.target.value })}
+                    className="border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
                   />
                 </div>
               )}
               
               {formData.role === 'staff' && (
                 <div className="space-y-2 col-span-2">
-                  <Label htmlFor="editDepartment">Department</Label>
+                  <Label htmlFor="editDepartment" className="text-[#2E3192] font-medium">Department</Label>
                   <Input
                     id="editDepartment"
                     value={formData.department}
                     onChange={(e) => setFormData({ ...formData, department: e.target.value })}
+                    className="border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
                   />
                 </div>
               )}
             </div>
             
             <DialogFooter>
-              <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+              <Button variant="outline" className="border-gray-300" onClick={() => setIsEditDialogOpen(false)}>
                 Cancel
               </Button>
-              <Button onClick={handleUpdateUser} disabled={isUpdating}>
+              <Button
+                className="bg-[#F9E81B] hover:bg-[#e6d619] text-[#2E3192] font-semibold"
+                onClick={handleUpdateUser}
+                disabled={isUpdating}
+              >
                 {isUpdating ? 'Updating...' : 'Update User'}
               </Button>
             </DialogFooter>
