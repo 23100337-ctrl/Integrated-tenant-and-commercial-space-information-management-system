@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Tabs, TabsContent } from '../../components/ui/tabs.jsx';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table.jsx';
 import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar.jsx';
-import { Search, Eye, Edit, Plus } from 'lucide-react';
+import { Search, Eye, Edit, Plus, Calendar } from 'lucide-react';
 import connection from '../../connected/connection.js';
 
 export function TenantAppointments() {
@@ -105,17 +105,18 @@ export function TenantAppointments() {
     }
   };
 
-  const statusVariant = (status) => {
+  const getStatusColor = (status) => {
     switch (status) {
-      case 'cancelled':
-        return 'destructive';
-      case 'completed':
-        return 'outline';
-      case 'in_progress':
-        return 'default';
       case 'scheduled':
+        return 'bg-[#F9E81B]/30 text-[#2E3192]';
+      case 'in_progress':
+        return 'bg-[#2E3192]/10 text-[#2E3192]';
+      case 'completed':
+        return 'bg-green-100 text-green-700';
+      case 'cancelled':
+        return 'bg-[#ED1C24]/10 text-[#ED1C24]';
       default:
-        return 'secondary';
+        return 'bg-gray-100 text-gray-700';
     }
   };
 
@@ -285,13 +286,16 @@ export function TenantAppointments() {
       <div className="space-y-6">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">My Appointments</h1>
+            <h1 className="text-3xl font-bold text-[#2E3192]">My Appointments</h1>
             <p className="text-gray-600 mt-1">
               View and manage your schedules
             </p>
           </div>
           <div className="flex flex-col items-end gap-2">
-            <Button onClick={() => setIsCreateDialogOpen(true)}>
+            <Button 
+              onClick={() => setIsCreateDialogOpen(true)}
+              className="bg-[#F9E81B] hover:bg-[#e6d619] text-[#2E3192] font-semibold"
+            >
               <Plus className="h-4 w-4 mr-2" />
               Book Appointment
             </Button>
@@ -302,7 +306,7 @@ export function TenantAppointments() {
           <TabsContent value="appointments">
             <Card className="mt-4">
               <CardHeader>
-                <CardTitle>Appointments</CardTitle>
+                <CardTitle className="text-[#2E3192]">Appointments</CardTitle>
                 <CardDescription>
                   {filteredAppointments.length} appointment{filteredAppointments.length !== 1 ? 's' : ''} found
                 </CardDescription>
@@ -315,12 +319,12 @@ export function TenantAppointments() {
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Search appointments..."
-                      className="pl-10"
+                      className="pl-10 border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
                     />
                   </div>
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                     <Select value={dateFilter} onValueChange={setDateFilter}>
-                      <SelectTrigger className="w-full sm:w-[170px]">
+                      <SelectTrigger className="w-full sm:w-[170px] border-gray-200">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -331,7 +335,7 @@ export function TenantAppointments() {
                       </SelectContent>
                     </Select>
                     <Select value={statusFilter} onValueChange={setStatusFilter}>
-                      <SelectTrigger className="w-full sm:w-[140px]">
+                      <SelectTrigger className="w-full sm:w-[140px] border-gray-200">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -345,32 +349,33 @@ export function TenantAppointments() {
                   </div>
                 </div>
 
-                <div className="rounded-md border overflow-x-auto">
+                <div className="rounded-md border border-gray-200 overflow-x-auto">
                   <Table>
                     <TableHeader>
-                      <TableRow>
-                        <TableHead>Time / Date</TableHead>
-                        <TableHead>Client / Event</TableHead>
-                        <TableHead>Assigned To</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
+                      <TableRow className="bg-gray-50">
+                        <TableHead className="text-[#2E3192] font-semibold">Time / Date</TableHead>
+                        <TableHead className="text-[#2E3192] font-semibold">Client / Event</TableHead>
+                        <TableHead className="text-[#2E3192] font-semibold">Assigned To</TableHead>
+                        <TableHead className="text-[#2E3192] font-semibold">Status</TableHead>
+                        <TableHead className="text-right text-[#2E3192] font-semibold">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {filteredAppointments.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={5} className="py-10 text-center text-sm text-gray-500">
-                            No appointments match your filters.
+                          <TableCell colSpan={5} className="py-12 text-center">
+                            <Calendar className="h-10 w-10 mx-auto mb-3 text-[#2E3192]/30" />
+                            <p className="text-sm text-gray-500">No appointments match your filters.</p>
                           </TableCell>
                         </TableRow>
                       ) : (
                         filteredAppointments.map((apt) => {
                           const assigned = apt.assignedTo || 'Unassigned';
                           return (
-                            <TableRow key={apt.id}>
+                            <TableRow key={apt.id} className="hover:bg-[#F9E81B]/5">
                               <TableCell>
                                 <div className="flex flex-col">
-                                  <span className="font-medium">{apt.time || '-'}</span>
+                                  <span className="font-medium text-[#2E3192]">{apt.time || '-'}</span>
                                   <span className="text-xs text-gray-500">{apt.date || '-'}</span>
                                 </div>
                               </TableCell>
@@ -382,9 +387,9 @@ export function TenantAppointments() {
                               </TableCell>
                               <TableCell>
                                 <div className="flex items-center gap-2">
-                                  <Avatar className="h-7 w-7">
+                                  <Avatar className="h-7 w-7 border border-[#F9E81B]">
                                     <AvatarImage src={apt.assigneeAvatar || ''} alt={assigned} />
-                                    <AvatarFallback className="text-[10px]">{getInitials(assigned)}</AvatarFallback>
+                                    <AvatarFallback className="text-[10px] bg-[#2E3192] text-white">{getInitials(assigned)}</AvatarFallback>
                                   </Avatar>
                                   <span className="text-sm">{assigned}</span>
                                 </div>
@@ -401,7 +406,7 @@ export function TenantAppointments() {
                                     } catch {}
                                   }}
                                 >
-                                  <SelectTrigger className="w-[140px]">
+                                  <SelectTrigger className="w-[140px] border-gray-200">
                                     <SelectValue />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -414,10 +419,20 @@ export function TenantAppointments() {
                               </TableCell>
                               <TableCell className="text-right">
                                 <div className="flex justify-end gap-1">
-                                  <Button variant="ghost" size="sm" onClick={() => openViewDialog(apt)}>
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm" 
+                                    onClick={() => openViewDialog(apt)}
+                                    className="text-[#2E3192] hover:text-[#2E3192] hover:bg-[#F9E81B]/20"
+                                  >
                                     <Eye className="h-4 w-4" />
                                   </Button>
-                                  <Button variant="ghost" size="sm" onClick={() => openEditDialog(apt)}>
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm" 
+                                    onClick={() => openEditDialog(apt)}
+                                    className="text-[#2E3192] hover:text-[#2E3192] hover:bg-[#F9E81B]/20"
+                                  >
                                     <Edit className="h-4 w-4" />
                                   </Button>
                                 </div>
@@ -434,6 +449,7 @@ export function TenantAppointments() {
           </TabsContent>
         </Tabs>
 
+        {/* Create Dialog */}
         <Dialog
           open={isCreateDialogOpen}
           onOpenChange={(open) => {
@@ -443,49 +459,53 @@ export function TenantAppointments() {
         >
           <DialogContent className="sm:max-w-[520px]">
             <DialogHeader>
-              <DialogTitle>Book Appointment</DialogTitle>
+              <DialogTitle className="text-[#2E3192]">Book Appointment</DialogTitle>
               <DialogDescription>Schedule a new appointment.</DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-2">
               <div className="space-y-2">
-                <Label>Title *</Label>
+                <Label className="text-[#2E3192] font-medium">Title <span className="text-[#ED1C24]">*</span></Label>
                 <Input
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   placeholder="e.g., Unit inspection"
+                  className="border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Date *</Label>
+                  <Label className="text-[#2E3192] font-medium">Date <span className="text-[#ED1C24]">*</span></Label>
                   <Input
                     type="date"
                     value={formData.date}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                    className="border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Time *</Label>
+                  <Label className="text-[#2E3192] font-medium">Time <span className="text-[#ED1C24]">*</span></Label>
                   <Input
                     type="time"
                     value={formData.time}
                     onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                    className="border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
                   />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label>Location</Label>
+                <Label className="text-[#2E3192] font-medium">Location</Label>
                 <Input
                   value={formData.location}
                   onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                   placeholder="e.g., Unit A-101"
+                  className="border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Status</Label>
+                  <Label className="text-[#2E3192] font-medium">Status</Label>
                   <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
-                    <SelectTrigger>
+                    <SelectTrigger className="border-gray-200">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -499,14 +519,17 @@ export function TenantAppointments() {
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+              <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)} className="border-gray-300">
                 Cancel
               </Button>
-              <Button onClick={handleCreateAppointment}>Book</Button>
+              <Button onClick={handleCreateAppointment} className="bg-[#F9E81B] hover:bg-[#e6d619] text-[#2E3192] font-semibold">
+                Book
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
 
+        {/* View Dialog */}
         <Dialog
           open={isViewDialogOpen}
           onOpenChange={(open) => {
@@ -516,7 +539,7 @@ export function TenantAppointments() {
         >
           <DialogContent className="sm:max-w-[520px]">
             <DialogHeader>
-              <DialogTitle>Appointment Details</DialogTitle>
+              <DialogTitle className="text-[#2E3192]">Appointment Details</DialogTitle>
               <DialogDescription>View appointment information.</DialogDescription>
             </DialogHeader>
             {selectedAppointment ? (
@@ -544,11 +567,15 @@ export function TenantAppointments() {
                   <Input value={selectedAppointment.assignedTo || 'Unassigned'} readOnly className="bg-gray-50/50" />
                 </div>
                 <div className="flex items-center justify-between gap-3">
-                  <Badge variant={statusVariant(selectedAppointment.status)}>
+                  <Badge className={getStatusColor(selectedAppointment.status)}>
                     {statusLabel(selectedAppointment.status)}
                   </Badge>
                   <div className="flex gap-2">
-                    <Button variant="outline" onClick={() => openEditDialog(selectedAppointment)}>
+                    <Button 
+                      variant="outline" 
+                      onClick={() => openEditDialog(selectedAppointment)}
+                      className="border-[#2E3192] text-[#2E3192] hover:bg-[#2E3192] hover:text-white"
+                    >
                       Edit
                     </Button>
                   </div>
@@ -556,13 +583,14 @@ export function TenantAppointments() {
               </div>
             ) : null}
             <DialogFooter>
-              <Button variant="outline" onClick={() => setIsViewDialogOpen(false)}>
+              <Button variant="outline" onClick={() => setIsViewDialogOpen(false)} className="border-gray-300">
                 Close
               </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
 
+        {/* Edit Dialog */}
         <Dialog
           open={isEditDialogOpen}
           onOpenChange={(open) => {
@@ -572,41 +600,51 @@ export function TenantAppointments() {
         >
           <DialogContent className="sm:max-w-[520px]">
             <DialogHeader>
-              <DialogTitle>Edit Appointment</DialogTitle>
+              <DialogTitle className="text-[#2E3192]">Edit Appointment</DialogTitle>
               <DialogDescription>Update appointment details.</DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-2">
               <div className="space-y-2">
-                <Label>Title *</Label>
-                <Input value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
+                <Label className="text-[#2E3192] font-medium">Title <span className="text-[#ED1C24]">*</span></Label>
+                <Input 
+                  value={formData.title} 
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })} 
+                  className="border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
+                />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Date *</Label>
+                  <Label className="text-[#2E3192] font-medium">Date <span className="text-[#ED1C24]">*</span></Label>
                   <Input
                     type="date"
                     value={formData.date}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                    className="border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Time *</Label>
+                  <Label className="text-[#2E3192] font-medium">Time <span className="text-[#ED1C24]">*</span></Label>
                   <Input
                     type="time"
                     value={formData.time}
                     onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                    className="border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
                   />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label>Location</Label>
-                <Input value={formData.location} onChange={(e) => setFormData({ ...formData, location: e.target.value })} />
+                <Label className="text-[#2E3192] font-medium">Location</Label>
+                <Input 
+                  value={formData.location} 
+                  onChange={(e) => setFormData({ ...formData, location: e.target.value })} 
+                  className="border-gray-200 focus:border-[#F9E81B] focus:ring-[#F9E81B]"
+                />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Status</Label>
+                  <Label className="text-[#2E3192] font-medium">Status</Label>
                   <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
-                    <SelectTrigger>
+                    <SelectTrigger className="border-gray-200">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -620,22 +658,27 @@ export function TenantAppointments() {
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+              <Button variant="outline" onClick={() => setIsEditDialogOpen(false)} className="border-gray-300">
                 Cancel
               </Button>
-              <Button onClick={handleUpdateAppointment}>Update</Button>
+              <Button onClick={handleUpdateAppointment} className="bg-[#F9E81B] hover:bg-[#e6d619] text-[#2E3192] font-semibold">
+                Update
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
 
+        {/* Result Dialog */}
         <Dialog open={isResultDialogOpen} onOpenChange={setIsResultDialogOpen}>
           <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle>{resultTitle}</DialogTitle>
+              <DialogTitle className="text-[#2E3192]">{resultTitle}</DialogTitle>
               <DialogDescription>{resultMessage}</DialogDescription>
             </DialogHeader>
             <DialogFooter>
-              <Button onClick={() => setIsResultDialogOpen(false)}>OK</Button>
+              <Button onClick={() => setIsResultDialogOpen(false)} className="bg-[#2E3192] hover:bg-[#1f2170] text-white">
+                OK
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

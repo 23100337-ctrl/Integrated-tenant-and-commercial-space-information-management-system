@@ -38,49 +38,74 @@ export function StaffOperations() {
     load();
   }, []);
 
+  const getPriorityBadge = (priority) => {
+    switch (priority) {
+      case 'high':
+        return <Badge className="bg-[#ED1C24] text-white">{priority}</Badge>;
+      case 'medium':
+        return <Badge className="bg-[#F9E81B] text-[#2E3192]">{priority}</Badge>;
+      default:
+        return <Badge className="bg-gray-100 text-gray-700">{priority}</Badge>;
+    }
+  };
+
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case 'completed':
+        return <Badge className="bg-[#2E3192] text-white">{status}</Badge>;
+      case 'in_progress':
+        return <Badge className="bg-[#F9E81B]/20 text-[#2E3192] border border-[#F9E81B]">{status.replace('_', ' ')}</Badge>;
+      case 'cancelled':
+        return <Badge className="bg-gray-100 text-gray-700">{status}</Badge>;
+      default:
+        return <Badge className="bg-[#ED1C24]/10 text-[#ED1C24] border border-[#ED1C24]/30">{status}</Badge>;
+    }
+  };
+
   return (
     <Layout role="staff">
       <div className="space-y-6">
         {/* Header */}
-        <h1 className="text-3xl font-bold">Operations</h1>
+        <div>
+          <h1 className="text-3xl font-bold text-[#2E3192]">Operations</h1>
+          <p className="text-gray-600 mt-1">Manage and track assigned operation requests</p>
+        </div>
         
         {/* Requests table */}
-        <Card>
-          <CardHeader>
-            <CardTitle>My Assigned Requests</CardTitle>
+        <Card className="border border-gray-200 shadow-sm">
+          <CardHeader className="border-b border-gray-100">
+            <CardTitle className="text-[#2E3192]">My Assigned Requests</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-0">
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead>Title</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Priority</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Date</TableHead>
+                <TableRow className="bg-gray-50">
+                  <TableHead className="text-[#2E3192] font-semibold">Title</TableHead>
+                  <TableHead className="text-[#2E3192] font-semibold">Type</TableHead>
+                  <TableHead className="text-[#2E3192] font-semibold">Priority</TableHead>
+                  <TableHead className="text-[#2E3192] font-semibold">Status</TableHead>
+                  <TableHead className="text-[#2E3192] font-semibold">Date</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {requests.map((req) => (
-                  <TableRow key={req.id}>
-                    <TableCell className="font-medium">{req.title}</TableCell>
-                    <TableCell>{req.type || req.request_type}</TableCell>
+                  <TableRow key={req.id} className="hover:bg-[#F9E81B]/5 transition-colors">
+                    <TableCell className="font-medium text-gray-900">{req.title}</TableCell>
+                    <TableCell className="text-gray-600">{req.type || req.request_type}</TableCell>
                     <TableCell>
-                      <Badge variant={req.priority === 'high' ? 'destructive' : 'default'}>
-                        {req.priority}
-                      </Badge>
+                      {getPriorityBadge(req.priority)}
                     </TableCell>
                     <TableCell>
                       <Select
                         value={req.status || 'pending'}
                         onValueChange={async (value) => {
                           try {
-                            const updated = await api.operations.updateRequest(String(req.id), { status: value });
+                            const updated = await connection.operations.updateRequest(String(req.id), { status: value });
                             setRequests(requests.map(r => String(r.id) === String(req.id) ? updated : r));
                           } catch (e) {}
                         }}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="w-[140px] border-gray-300 focus:border-[#2E3192] focus:ring-[#2E3192]">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -91,9 +116,16 @@ export function StaffOperations() {
                         </SelectContent>
                       </Select>
                     </TableCell>
-                    <TableCell>{formatDate(req.createdAt || req.created_at)}</TableCell>
+                    <TableCell className="text-gray-600">{formatDate(req.createdAt || req.created_at)}</TableCell>
                   </TableRow>
                 ))}
+                {requests.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-8 text-gray-500">
+                      No assigned requests found
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </CardContent>

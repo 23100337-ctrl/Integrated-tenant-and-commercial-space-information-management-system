@@ -312,13 +312,16 @@ export function StaffSchedule() {
       <div className="space-y-6">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">My Schedule</h1>
+            <h1 className="text-3xl font-bold text-[#2E3192]">My Schedule</h1>
             <p className="text-gray-600 mt-1">
               View and manage your appointments
             </p>
           </div>
           <div className="flex flex-col items-end gap-2">
-            <Button onClick={() => setIsCreateDialogOpen(true)}>
+<Button 
+              onClick={() => setIsCreateDialogOpen(true)}
+              className="bg-[#F9E81B] hover:bg-[#e6d619] text-[#2E3192] font-semibold"
+            >
               <Plus className="h-4 w-4 mr-2" />
               New Appointment
             </Button>
@@ -329,7 +332,7 @@ export function StaffSchedule() {
           <TabsContent value="appointments">
             <Card className="mt-4">
               <CardHeader>
-                <CardTitle>Appointments</CardTitle>
+                <CardTitle className="text-[#2E3192]">Appointments</CardTitle>
                 <CardDescription>
                   {filteredAppointments.length} appointment{filteredAppointments.length !== 1 ? 's' : ''} found
                 </CardDescription>
@@ -387,13 +390,13 @@ export function StaffSchedule() {
 
                 <div className="rounded-md border overflow-x-auto">
                   <Table>
-                    <TableHeader>
+<TableHeader className="bg-gray-50">
                       <TableRow>
-                        <TableHead>Time / Date</TableHead>
-                        <TableHead>Client / Event</TableHead>
-                        <TableHead>Assigned To</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
+                        <TableHead className="text-[#2E3192] font-semibold">Time / Date</TableHead>
+                        <TableHead className="text-[#2E3192] font-semibold">Client / Event</TableHead>
+                        <TableHead className="text-[#2E3192] font-semibold">Assigned To</TableHead>
+                        <TableHead className="text-[#2E3192] font-semibold">Status</TableHead>
+                        <TableHead className="text-right text-[#2E3192] font-semibold">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -407,7 +410,7 @@ export function StaffSchedule() {
                         filteredAppointments.map((apt) => {
                           const assigned = apt.assignedTo || 'Unassigned';
                           return (
-                            <TableRow key={apt.id}>
+                            <TableRow key={apt.id} className="hover:bg-[#F9E81B]/5">
                               <TableCell>
                                 <div className="flex flex-col">
                                   <span className="font-medium">{apt.time || '-'}</span>
@@ -424,7 +427,7 @@ export function StaffSchedule() {
                                 <div className="flex items-center gap-2">
                                   <Avatar className="h-7 w-7">
                                     <AvatarImage src={apt.assigneeAvatar || ''} alt={assigned} />
-                                    <AvatarFallback className="text-[10px]">{getInitials(assigned)}</AvatarFallback>
+                                    <AvatarFallback className="text-[10px] bg-[#F9E81B] text-[#2E3192]">{getInitials(assigned)}</AvatarFallback>
                                   </Avatar>
                                   <span className="text-sm">{assigned}</span>
                                 </div>
@@ -454,10 +457,10 @@ export function StaffSchedule() {
                               </TableCell>
                               <TableCell className="text-right">
                                 <div className="flex justify-end gap-1">
-                                  <Button variant="ghost" size="sm" onClick={() => openViewDialog(apt)}>
+<Button variant="ghost" size="sm" onClick={() => openViewDialog(apt)} className="hover:bg-[#F9E81B]/20 hover:text-[#2E3192]">
                                     <Eye className="h-4 w-4" />
                                   </Button>
-                                  <Button variant="ghost" size="sm" onClick={() => openEditDialog(apt)}>
+                                  <Button variant="ghost" size="sm" onClick={() => openEditDialog(apt)} className="hover:bg-[#F9E81B]/20 hover:text-[#2E3192]">
                                     <Edit className="h-4 w-4" />
                                   </Button>
                                 </div>
@@ -483,12 +486,12 @@ export function StaffSchedule() {
         >
           <DialogContent className="sm:max-w-[520px]">
             <DialogHeader>
-              <DialogTitle>New Appointment</DialogTitle>
+              <DialogTitle className="text-[#2E3192]">New Appointment</DialogTitle>
               <DialogDescription>Create a new schedule entry.</DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-2">
               <div className="space-y-2">
-                <Label>Title *</Label>
+                <Label className="text-[#2E3192] font-medium">Title <span className="text-[#ED1C24]">*</span></Label>
                 <Input
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
@@ -497,7 +500,7 @@ export function StaffSchedule() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Date *</Label>
+                  <Label className="text-[#2E3192] font-medium">Date <span className="text-[#ED1C24]">*</span></Label>
                   <Input
                     type="date"
                     value={formData.date}
@@ -505,7 +508,7 @@ export function StaffSchedule() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Time *</Label>
+                  <Label className="text-[#2E3192] font-medium">Time <span className="text-[#ED1C24]">*</span></Label>
                   <Input
                     type="time"
                     value={formData.time}
@@ -514,7 +517,7 @@ export function StaffSchedule() {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label>Location</Label>
+                <Label className="text-[#2E3192] font-medium">Location</Label>
                 <Input
                   value={formData.location}
                   onChange={(e) => setFormData({ ...formData, location: e.target.value })}
@@ -523,7 +526,7 @@ export function StaffSchedule() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Assigned To</Label>
+                  <Label className="text-[#2E3192] font-medium">Assigned To</Label>
                   <Select
                     value={formData.assignedTo ? String(formData.assignedTo) : UNASSIGNED_VALUE}
                     onValueChange={(value) =>
@@ -544,7 +547,7 @@ export function StaffSchedule() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label>Status</Label>
+                  <Label className="text-[#2E3192] font-medium">Status</Label>
                   <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
                     <SelectTrigger>
                       <SelectValue />
@@ -560,10 +563,10 @@ export function StaffSchedule() {
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+<Button variant="outline" onClick={() => setIsCreateDialogOpen(false)} className="border-gray-300">
                 Cancel
               </Button>
-              <Button onClick={handleCreateAppointment}>Create</Button>
+              <Button onClick={handleCreateAppointment} className="bg-[#F9E81B] hover:bg-[#e6d619] text-[#2E3192] font-semibold">Create</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -577,31 +580,31 @@ export function StaffSchedule() {
         >
           <DialogContent className="sm:max-w-[520px]">
             <DialogHeader>
-              <DialogTitle>Appointment Details</DialogTitle>
+              <DialogTitle className="text-[#2E3192]">Appointment Details</DialogTitle>
               <DialogDescription>View appointment information.</DialogDescription>
             </DialogHeader>
             {selectedAppointment ? (
               <div className="space-y-4 py-2">
                 <div className="space-y-2">
-                  <Label className="text-gray-500">Title</Label>
+                  <Label className="text-[#2E3192] font-medium">Title</Label>
                   <Input value={selectedAppointment.title || ''} readOnly className="bg-gray-50/50" />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-gray-500">Date</Label>
+                    <Label className="text-[#2E3192] font-medium">Date</Label>
                     <Input value={selectedAppointment.date || ''} readOnly className="bg-gray-50/50" />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-gray-500">Time</Label>
+                    <Label className="text-[#2E3192] font-medium">Time</Label>
                     <Input value={selectedAppointment.time || ''} readOnly className="bg-gray-50/50" />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-gray-500">Location</Label>
+                  <Label className="text-[#2E3192] font-medium">Location</Label>
                   <Input value={selectedAppointment.location || ''} readOnly className="bg-gray-50/50" />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-gray-500">Assigned To</Label>
+                  <Label className="text-[#2E3192] font-medium">Assigned To</Label>
                   <Input value={selectedAppointment.assignedTo || 'Unassigned'} readOnly className="bg-gray-50/50" />
                 </div>
                 <div className="flex items-center justify-between gap-3">
@@ -609,7 +612,7 @@ export function StaffSchedule() {
                     {statusLabel(selectedAppointment.status)}
                   </Badge>
                   <div className="flex gap-2">
-                    <Button variant="outline" onClick={() => openEditDialog(selectedAppointment)}>
+<Button variant="outline" onClick={() => openEditDialog(selectedAppointment)} className="border-gray-300 hover:bg-[#F9E81B]/10 hover:text-[#2E3192]">
                       Edit
                     </Button>
                   </div>
@@ -617,7 +620,7 @@ export function StaffSchedule() {
               </div>
             ) : null}
             <DialogFooter>
-              <Button variant="outline" onClick={() => setIsViewDialogOpen(false)}>
+<Button variant="outline" onClick={() => setIsViewDialogOpen(false)} className="border-gray-300">
                 Close
               </Button>
             </DialogFooter>
@@ -633,17 +636,17 @@ export function StaffSchedule() {
         >
           <DialogContent className="sm:max-w-[520px]">
             <DialogHeader>
-              <DialogTitle>Edit Appointment</DialogTitle>
+              <DialogTitle className="text-[#2E3192]">Edit Appointment</DialogTitle>
               <DialogDescription>Update appointment details.</DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-2">
               <div className="space-y-2">
-                <Label>Title *</Label>
+                <Label className="text-[#2E3192] font-medium">Title <span className="text-[#ED1C24]">*</span></Label>
                 <Input value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Date *</Label>
+                  <Label className="text-[#2E3192] font-medium">Date <span className="text-[#ED1C24]">*</span></Label>
                   <Input
                     type="date"
                     value={formData.date}
@@ -651,7 +654,7 @@ export function StaffSchedule() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Time *</Label>
+                  <Label className="text-[#2E3192] font-medium">Time <span className="text-[#ED1C24]">*</span></Label>
                   <Input
                     type="time"
                     value={formData.time}
@@ -660,12 +663,12 @@ export function StaffSchedule() {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label>Location</Label>
+                <Label className="text-[#2E3192] font-medium">Location</Label>
                 <Input value={formData.location} onChange={(e) => setFormData({ ...formData, location: e.target.value })} />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Assigned To</Label>
+                  <Label className="text-[#2E3192] font-medium">Assigned To</Label>
                   <Select
                     value={formData.assignedTo ? String(formData.assignedTo) : UNASSIGNED_VALUE}
                     onValueChange={(value) =>
@@ -686,7 +689,7 @@ export function StaffSchedule() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label>Status</Label>
+                  <Label className="text-[#2E3192] font-medium">Status</Label>
                   <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
                     <SelectTrigger>
                       <SelectValue />
@@ -702,10 +705,10 @@ export function StaffSchedule() {
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+<Button variant="outline" onClick={() => setIsEditDialogOpen(false)} className="border-gray-300">
                 Cancel
               </Button>
-              <Button onClick={handleUpdateAppointment}>Update</Button>
+              <Button onClick={handleUpdateAppointment} className="bg-[#F9E81B] hover:bg-[#e6d619] text-[#2E3192] font-semibold">Update</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -713,11 +716,11 @@ export function StaffSchedule() {
         <Dialog open={isResultDialogOpen} onOpenChange={setIsResultDialogOpen}>
           <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle>{resultTitle}</DialogTitle>
+              <DialogTitle className="text-[#2E3192]">{resultTitle}</DialogTitle>
               <DialogDescription>{resultMessage}</DialogDescription>
             </DialogHeader>
             <DialogFooter>
-              <Button onClick={() => setIsResultDialogOpen(false)}>OK</Button>
+              <Button onClick={() => setIsResultDialogOpen(false)} className="bg-[#F9E81B] hover:bg-[#e6d619] text-[#2E3192] font-semibold">OK</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
